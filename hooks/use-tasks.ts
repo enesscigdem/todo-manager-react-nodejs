@@ -54,11 +54,19 @@ export function useTaskOperations() {
         updatedAt: new Date().toISOString(),
       }
 
+      // Only send fields that API expects
+      const payload = {
+        title: taskWithUpdatedTime.title,
+        description: taskWithUpdatedTime.description,
+        priority: taskWithUpdatedTime.priority,
+        completed: taskWithUpdatedTime.completed,
+      }
+
       try {
         const res = await fetch(`${API_BASE}/api/tasks/${updatedTask.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(taskWithUpdatedTime),
+          body: JSON.stringify(payload),
         })
         if (!res.ok) {
           const err = await res.json()
