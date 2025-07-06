@@ -18,14 +18,14 @@ export function useTaskOperations() {
       }
 
       try {
-        // TODO: API call to create task
-        // await fetch('/api/tasks', {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(newTask)
-        // })
+        const res = await fetch("/api/tasks", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(taskData),
+        })
+        const created = await res.json()
 
-        dispatch({ type: "ADD_TASK", payload: newTask })
+        dispatch({ type: "ADD_TASK", payload: created })
         dispatch({
           type: "SHOW_TOAST",
           payload: { message: "Görev başarıyla oluşturuldu!", type: "success" },
@@ -49,12 +49,11 @@ export function useTaskOperations() {
       }
 
       try {
-        // TODO: API call to update task
-        // await fetch(`/api/tasks/${updatedTask.id}`, {
-        //   method: 'PUT',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(taskWithUpdatedTime)
-        // })
+        await fetch(`/api/tasks/${updatedTask.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(taskWithUpdatedTime),
+        })
 
         dispatch({ type: "UPDATE_TASK", payload: taskWithUpdatedTime })
         dispatch({
@@ -78,8 +77,7 @@ export function useTaskOperations() {
       if (!taskToDelete) return
 
       try {
-        // TODO: API call to delete task
-        // await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' })
+        await fetch(`/api/tasks/${taskId}`, { method: "DELETE" })
 
         dispatch({ type: "DELETE_TASK", payload: taskId })
         dispatch({
@@ -107,13 +105,7 @@ export function useTaskOperations() {
   const toggleTask = useCallback(
     async (taskId: string) => {
       try {
-        // TODO: API call to toggle task
-        // const task = state.tasks.find(t => t.id === taskId)
-        // await fetch(`/api/tasks/${taskId}`, {
-        //   method: 'PATCH',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify({ completed: !task?.completed })
-        // })
+        await fetch(`/api/tasks/${taskId}/toggle`, { method: "PATCH" })
 
         dispatch({ type: "TOGGLE_TASK", payload: taskId })
       } catch (error) {

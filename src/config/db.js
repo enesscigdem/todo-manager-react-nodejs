@@ -1,14 +1,37 @@
-const mongoose = require('mongoose');
+const sql = require('mssql')
 
-module.exports = async (uri) => {
+let pool
+
+module.exports = async function connect(connectionString) {
   try {
-    await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('MongoDB connected');
-  } catch (error) {
-    console.error('MongoDB connection error:', error.message);
-    process.exit(1);
+    pool = await sql.connect(connectionString)
+    console.log('MSSQL connected')
+
+    // Run simple migrations to ensure tables exist
+    await pool.request().query(`
+      IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'Users') AND type in (N'U'))
+      CREATE TABLE Users (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        email NVARCHAR(255) NOT NULL UNIQUE,
+        password NVARCHAR(255) NOT NULL
+      )
+    `)
+    await pool.request().query(`
+      IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'Tasks') AND type in (N'U'))
+      CREATE TABLE Tasks (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        title NVARCHAR(255) NOT NULL,
+        description NVARCHAR(MAX),
+        priority NVARCHAR(10) DEFAULT 'Low',
+        completed BIT DEFAULT 0,
+        owner INT NOT NULL,
+        CONSTRAINT FK_User_Task FOREIGN KEY(owner) REFERENCES Users(id)
+      )
+    `)
+  } catch (err) {
+    console.error('MSSQL connection error:', err.message)
+    process.exit(1)
   }
-};
+}
+
+module.exports.getPool = () => pool

@@ -1,10 +1,10 @@
-require('dotenv').config();
-const loadDB = require('./db');
+require('dotenv').config()
+const loadDB = require('./db')
 
 module.exports = async () => {
-  const { MONGODB_URI } = process.env;
-  if (!MONGODB_URI) {
-    throw new Error('MONGODB_URI not set');
+  const { MSSQL_CONNECTION_STRING } = process.env
+  if (!MSSQL_CONNECTION_STRING) {
+    throw new Error('MSSQL_CONNECTION_STRING not set')
   }
-  await loadDB(MONGODB_URI);
-};
+  await loadDB(MSSQL_CONNECTION_STRING)
+}
