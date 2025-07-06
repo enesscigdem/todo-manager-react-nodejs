@@ -1,6 +1,17 @@
 "use client"
 
 import { X, Edit, Trash2, Calendar, Flag } from "lucide-react"
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog"
 import { useTasks } from "@/context/tasks-provider"
 import { useTaskOperations } from "@/hooks/use-tasks"
 
@@ -56,8 +67,10 @@ export function TaskDetailModal() {
     }
   }
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "-"
     const date = new Date(dateString)
+    if (isNaN(date.getTime())) return "-"
     return date.toLocaleDateString("tr-TR", {
       year: "numeric",
       month: "long",
@@ -157,13 +170,29 @@ export function TaskDetailModal() {
               <Edit className="h-4 w-4 inline mr-2" />
               Düzenle
             </button>
-            <button
-              onClick={handleDelete}
-              className="px-4 py-2 bg-red-100 text-red-800 hover:bg-red-200 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-            >
-              <Trash2 className="h-4 w-4 inline mr-2" />
-              Sil
-            </button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button
+                  onClick={(e) => e.stopPropagation()}
+                  className="px-4 py-2 bg-red-100 text-red-800 hover:bg-red-200 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                >
+                  <Trash2 className="h-4 w-4 inline mr-2" />
+                  Sil
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Görev silinsin mi?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Bu işlem geri alınamaz. Silmek istediğinize emin misiniz?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Vazgeç</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete}>Sil</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
       </div>

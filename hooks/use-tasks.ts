@@ -8,6 +8,10 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || ""
 // Custom hook for task operations with API integration
 export function useTaskOperations() {
   const { state, dispatch } = useTasks()
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null
+
+  const authHeader = token ? { Authorization: `Bearer ${token}` } : {}
 
   // Add a new task
   const addTask = useCallback(
@@ -22,9 +26,13 @@ export function useTaskOperations() {
       try {
         const res = await fetch(`${API_BASE}/api/tasks`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", ...authHeader },
           body: JSON.stringify(taskData),
         })
+        if (!res.ok) {
+          const err = await res.json()
+          throw new Error(err.error || "Görev oluşturulamadı")
+        }
         const created = await res.json()
 
         dispatch({ type: "ADD_TASK", payload: created })
@@ -35,7 +43,7 @@ export function useTaskOperations() {
       } catch (error) {
         dispatch({
           type: "SHOW_TOAST",
-          payload: { message: "Görev oluşturulamadı", type: "error" },
+          payload: { message: (error as Error).message, type: "error" },
         })
       }
     },
@@ -51,11 +59,15 @@ export function useTaskOperations() {
       }
 
       try {
-        await fetch(`${API_BASE}/api/tasks/${updatedTask.id}`, {
+        const res = await fetch(`${API_BASE}/api/tasks/${updatedTask.id}`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", ...authHeader },
           body: JSON.stringify(taskWithUpdatedTime),
         })
+        if (!res.ok) {
+          const err = await res.json()
+          throw new Error(err.error || "Görev güncellenemedi")
+        }
 
         dispatch({ type: "UPDATE_TASK", payload: taskWithUpdatedTime })
         dispatch({
@@ -65,7 +77,7 @@ export function useTaskOperations() {
       } catch (error) {
         dispatch({
           type: "SHOW_TOAST",
-          payload: { message: "Görev güncellenemedi", type: "error" },
+          payload: { message: (error as Error).message, type: "error" },
         })
       }
     },
@@ -79,7 +91,14 @@ export function useTaskOperations() {
       if (!taskToDelete) return
 
       try {
-        await fetch(`${API_BASE}/api/tasks/${taskId}`, { method: "DELETE" })
+        const res = await fetch(`${API_BASE}/api/tasks/${taskId}`, {
+          method: "DELETE",
+          headers: { ...authHeader },
+        })
+        if (!res.ok) {
+          const err = await res.json()
+          throw new Error(err.error || "Görev silinemedi")
+        }
 
         dispatch({ type: "DELETE_TASK", payload: taskId })
         dispatch({
@@ -96,7 +115,7 @@ export function useTaskOperations() {
       } catch (error) {
         dispatch({
           type: "SHOW_TOAST",
-          payload: { message: "Görev silinemedi", type: "error" },
+          payload: { message: (error as Error).message, type: "error" },
         })
       }
     },
@@ -107,13 +126,20 @@ export function useTaskOperations() {
   const toggleTask = useCallback(
     async (taskId: string) => {
       try {
-        await fetch(`${API_BASE}/api/tasks/${taskId}/toggle`, { method: "PATCH" })
+        const res = await fetch(`${API_BASE}/api/tasks/${taskId}/toggle`, {
+          method: "PATCH",
+          headers: { ...authHeader },
+        })
+        if (!res.ok) {
+          const err = await res.json()
+          throw new Error(err.error || "Görev güncellenemedi")
+        }
 
         dispatch({ type: "TOGGLE_TASK", payload: taskId })
       } catch (error) {
         dispatch({
           type: "SHOW_TOAST",
-          payload: { message: "Görev güncellenemedi", type: "error" },
+          payload: { message: (error as Error).message, type: "error" },
         })
       }
     },
