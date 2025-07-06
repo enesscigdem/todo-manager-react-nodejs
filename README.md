@@ -50,29 +50,15 @@ This repository also includes an Express.js API powering the React frontend.
 
 ### Endpoints
 
-- `POST /api/auth/register` – Register with `{email, password}` and receive `{token}`.
-- `POST /api/auth/login` – Login with credentials and receive `{token}`.
 - `GET /api/tasks` – List your tasks. Query params: `filter=all|active|completed`, `search`.
 - `POST /api/tasks` – Create a task with `{title, description?, priority?}`.
 - `PUT /api/tasks/:id` – Update any task field.
 - `PATCH /api/tasks/:id/toggle` – Toggle completion.
 - `DELETE /api/tasks/:id` – Delete a task.
 
-All `/api/tasks` routes require an `Authorization: Bearer <token>` header.
-
 ### Example Usage with curl
 
 ```bash
-# register
-curl -X POST http://localhost:3001/api/auth/register \
-  -H 'Content-Type: application/json' \
-  -d '{"email":"user@example.com","password":"secret"}'
-
-# login
-curl -X POST http://localhost:3001/api/auth/login \
-  -H 'Content-Type: application/json' \
-  -d '{"email":"user@example.com","password":"secret"}'
-
 # list tasks
-curl http://localhost:3001/api/tasks -H 'Authorization: Bearer <token>'
+curl http://localhost:3001/api/tasks
 ```

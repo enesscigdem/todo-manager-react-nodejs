@@ -23,9 +23,7 @@ module.exports = async function connect(connectionString) {
         title NVARCHAR(255) NOT NULL,
         description NVARCHAR(MAX),
         priority NVARCHAR(10) DEFAULT 'Low',
-        completed BIT DEFAULT 0,
-        owner INT NOT NULL,
-        CONSTRAINT FK_User_Task FOREIGN KEY(owner) REFERENCES Users(id)
+        completed BIT DEFAULT 0
       )
     `)
   } catch (err) {

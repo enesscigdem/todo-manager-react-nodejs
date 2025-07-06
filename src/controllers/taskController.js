@@ -20,11 +20,13 @@ exports.list = async (req, res, next) => {
   try {
     const { filter = 'all', search = '' } = req.query
     const pool = getPool()
-    let query = 'SELECT * FROM Tasks WHERE owner = @owner'
-    if (filter === 'active') query += ' AND completed = 0'
-    if (filter === 'completed') query += ' AND completed = 1'
-    if (search) query += ' AND (title LIKE @search OR description LIKE @search)'
-    const request = pool.request().input('owner', sql.Int, req.userId)
+    let query = 'SELECT * FROM Tasks'
+    const conditions = []
+    if (filter === 'active') conditions.push('completed = 0')
+    if (filter === 'completed') conditions.push('completed = 1')
+    if (search) conditions.push('(title LIKE @search OR description LIKE @search)')
+    if (conditions.length > 0) query += ' WHERE ' + conditions.join(' AND ')
+    const request = pool.request()
     if (search) request.input('search', sql.NVarChar, `%${search}%`)
     const { recordset } = await request.query(query + ' ORDER BY id DESC')
     res.json(recordset)
@@ -45,9 +47,8 @@ exports.create = async (req, res, next) => {
       .input('title', sql.NVarChar, value.title)
       .input('description', sql.NVarChar, value.description || null)
       .input('priority', sql.NVarChar, value.priority || 'Low')
-      .input('owner', sql.Int, req.userId)
       .query(
-        'INSERT INTO Tasks (title, description, priority, owner) OUTPUT INSERTED.* VALUES (@title, @description, @priority, @owner)'
+        'INSERT INTO Tasks (title, description, priority) OUTPUT INSERTED.* VALUES (@title, @description, @priority)'
       )
     res.status(201).json(result.recordset[0])
   } catch (err) {
@@ -65,25 +66,23 @@ exports.update = async (req, res, next) => {
     const { recordset } = await pool
       .request()
       .input('id', sql.Int, req.params.id)
-      .input('owner', sql.Int, req.userId)
-      .query('SELECT * FROM Tasks WHERE id=@id AND owner=@owner')
+      .query('SELECT * FROM Tasks WHERE id=@id')
     if (recordset.length === 0) return res.status(404).json({ error: 'Task not found' })
 
     const fields = []
-    const request = pool.request().input('id', sql.Int, req.params.id).input('owner', sql.Int, req.userId)
+    const request = pool.request().input('id', sql.Int, req.params.id)
     if (value.title !== undefined) { request.input('title', sql.NVarChar, value.title); fields.push('title=@title') }
     if (value.description !== undefined) { request.input('description', sql.NVarChar, value.description); fields.push('description=@description') }
     if (value.priority !== undefined) { request.input('priority', sql.NVarChar, value.priority); fields.push('priority=@priority') }
     if (value.completed !== undefined) { request.input('completed', sql.Bit, value.completed); fields.push('completed=@completed') }
     if (fields.length > 0) {
-      await request.query(`UPDATE Tasks SET ${fields.join(', ')} WHERE id=@id AND owner=@owner`)
+      await request.query(`UPDATE Tasks SET ${fields.join(', ')} WHERE id=@id`)
     }
 
     const { recordset: updated } = await pool
       .request()
       .input('id', sql.Int, req.params.id)
-      .input('owner', sql.Int, req.userId)
-      .query('SELECT * FROM Tasks WHERE id=@id AND owner=@owner')
+      .query('SELECT * FROM Tasks WHERE id=@id')
     res.json(updated[0])
   } catch (err) {
     next(err);
@@ -97,9 +96,8 @@ exports.toggle = async (req, res, next) => {
     const result = await pool
       .request()
       .input('id', sql.Int, req.params.id)
-      .input('owner', sql.Int, req.userId)
       .query(
-        'UPDATE Tasks SET completed = CASE WHEN completed = 1 THEN 0 ELSE 1 END OUTPUT INSERTED.* WHERE id=@id AND owner=@owner'
+        'UPDATE Tasks SET completed = CASE WHEN completed = 1 THEN 0 ELSE 1 END OUTPUT INSERTED.* WHERE id=@id'
       )
     if (result.recordset.length === 0) return res.status(404).json({ error: 'Task not found' })
     res.json(result.recordset[0])
@@ -115,8 +113,7 @@ exports.remove = async (req, res, next) => {
     const result = await pool
       .request()
       .input('id', sql.Int, req.params.id)
-      .input('owner', sql.Int, req.userId)
-      .query('DELETE FROM Tasks WHERE id=@id AND owner=@owner')
+      .query('DELETE FROM Tasks WHERE id=@id')
     if (result.rowsAffected[0] === 0) return res.status(404).json({ error: 'Task not found' })
     res.json({ message: 'Task deleted' })
   } catch (err) {
