@@ -8,10 +8,11 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || ""
 // Custom hook for task operations with API integration
 export function useTaskOperations() {
   const { state, dispatch } = useTasks()
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null
-
-  const authHeader = token ? { Authorization: `Bearer ${token}` } : {}
+  const getAuthHeader = () => {
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null
+    return token ? { Authorization: `Bearer ${token}` } : {}
+  }
 
   // Add a new task
   const addTask = useCallback(
@@ -26,7 +27,7 @@ export function useTaskOperations() {
       try {
         const res = await fetch(`${API_BASE}/api/tasks`, {
           method: "POST",
-          headers: { "Content-Type": "application/json", ...authHeader },
+          headers: { "Content-Type": "application/json", ...getAuthHeader() },
           body: JSON.stringify(taskData),
         })
         if (!res.ok) {
@@ -61,7 +62,7 @@ export function useTaskOperations() {
       try {
         const res = await fetch(`${API_BASE}/api/tasks/${updatedTask.id}`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json", ...authHeader },
+          headers: { "Content-Type": "application/json", ...getAuthHeader() },
           body: JSON.stringify(taskWithUpdatedTime),
         })
         if (!res.ok) {
@@ -93,7 +94,7 @@ export function useTaskOperations() {
       try {
         const res = await fetch(`${API_BASE}/api/tasks/${taskId}`, {
           method: "DELETE",
-          headers: { ...authHeader },
+          headers: { ...getAuthHeader() },
         })
         if (!res.ok) {
           const err = await res.json()
@@ -128,7 +129,7 @@ export function useTaskOperations() {
       try {
         const res = await fetch(`${API_BASE}/api/tasks/${taskId}/toggle`, {
           method: "PATCH",
-          headers: { ...authHeader },
+          headers: { ...getAuthHeader() },
         })
         if (!res.ok) {
           const err = await res.json()
