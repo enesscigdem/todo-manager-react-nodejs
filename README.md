@@ -28,3 +28,47 @@ Continue building your app on:
 2. Deploy your chats from the v0 interface
 3. Changes are automatically pushed to this repository
 4. Vercel deploys the latest version from this repository
+## Backend API
+
+This repository also includes an Express.js API powering the React frontend.
+
+### Setup
+
+1. Copy `.env.example` to `.env` and fill in `MONGODB_URI` and `JWT_SECRET`.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the server:
+   ```bash
+   npm start
+   ```
+
+### Endpoints
+
+- `POST /api/auth/register` – Register with `{email, password}` and receive `{token}`.
+- `POST /api/auth/login` – Login with credentials and receive `{token}`.
+- `GET /api/tasks` – List your tasks. Query params: `filter=all|active|completed`, `search`.
+- `POST /api/tasks` – Create a task with `{title, description?, priority?}`.
+- `PUT /api/tasks/:id` – Update any task field.
+- `PATCH /api/tasks/:id/toggle` – Toggle completion.
+- `DELETE /api/tasks/:id` – Delete a task.
+
+All `/api/tasks` routes require an `Authorization: Bearer <token>` header.
+
+### Example Usage with curl
+
+```bash
+# register
+curl -X POST http://localhost:3001/api/auth/register \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"user@example.com","password":"secret"}'
+
+# login
+curl -X POST http://localhost:3001/api/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"user@example.com","password":"secret"}'
+
+# list tasks
+curl http://localhost:3001/api/tasks -H 'Authorization: Bearer <token>'
+```
