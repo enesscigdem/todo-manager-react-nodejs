@@ -1,14 +1,15 @@
+// next.config.mjs
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:3001/api/:path*'
+      }
+    ]
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  images: {
-    unoptimized: true,
-  },
+  // eğer zaten export default kullanıyorsan onu güncelle 
 }
 
 export default nextConfig
