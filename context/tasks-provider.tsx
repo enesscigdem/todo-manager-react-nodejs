@@ -235,8 +235,10 @@ const TasksContext = createContext<{
 // Provider component
 export function TasksProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(tasksReducer, initialState)
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null
-  const authHeader = token ? { Authorization: `Bearer ${token}` } : {}
+  const getAuthHeader = () => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null
+    return token ? { Authorization: `Bearer ${token}` } : {}
+  }
 
   // Load tasks on mount
   useEffect(() => {
@@ -249,7 +251,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
         console.error("Failed to parse saved tasks:", error)
       }
     } else {
-      fetch(`${API_BASE}/api/tasks`, { headers: { ...authHeader } })
+        fetch(`${API_BASE}/api/tasks`, { headers: { ...getAuthHeader() } })
         .then(async (res) => {
           if (!res.ok) {
             const err = await res.json()
