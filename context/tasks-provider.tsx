@@ -3,6 +3,8 @@
 import type React from "react"
 import { createContext, useContext, useReducer, useEffect, type ReactNode } from "react"
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || ""
+
 // Types for our task management system
 export interface Task {
   id: string
@@ -245,7 +247,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
         console.error("Failed to parse saved tasks:", error)
       }
     } else {
-      fetch("/api/tasks")
+      fetch(`${API_BASE}/api/tasks`)
         .then((res) => res.json())
         .then((data) => {
           dispatch({ type: "SET_TASKS", payload: data })
