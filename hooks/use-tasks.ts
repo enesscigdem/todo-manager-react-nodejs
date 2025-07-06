@@ -3,6 +3,8 @@
 import { useTasks, type Task } from "@/context/tasks-provider"
 import { useCallback } from "react"
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || ""
+
 // Custom hook for task operations with API integration
 export function useTaskOperations() {
   const { state, dispatch } = useTasks()
@@ -18,7 +20,7 @@ export function useTaskOperations() {
       }
 
       try {
-        const res = await fetch("/api/tasks", {
+        const res = await fetch(`${API_BASE}/api/tasks`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(taskData),
@@ -49,7 +51,7 @@ export function useTaskOperations() {
       }
 
       try {
-        await fetch(`/api/tasks/${updatedTask.id}`, {
+        await fetch(`${API_BASE}/api/tasks/${updatedTask.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(taskWithUpdatedTime),
@@ -77,7 +79,7 @@ export function useTaskOperations() {
       if (!taskToDelete) return
 
       try {
-        await fetch(`/api/tasks/${taskId}`, { method: "DELETE" })
+        await fetch(`${API_BASE}/api/tasks/${taskId}`, { method: "DELETE" })
 
         dispatch({ type: "DELETE_TASK", payload: taskId })
         dispatch({
@@ -105,7 +107,7 @@ export function useTaskOperations() {
   const toggleTask = useCallback(
     async (taskId: string) => {
       try {
-        await fetch(`/api/tasks/${taskId}/toggle`, { method: "PATCH" })
+        await fetch(`${API_BASE}/api/tasks/${taskId}/toggle`, { method: "PATCH" })
 
         dispatch({ type: "TOGGLE_TASK", payload: taskId })
       } catch (error) {
