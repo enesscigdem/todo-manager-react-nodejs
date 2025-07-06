@@ -3,6 +3,17 @@
 import type React from "react"
 
 import { Edit, Trash2 } from "lucide-react"
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog"
 import { useTasks } from "@/context/tasks-provider"
 import { useTaskOperations } from "@/hooks/use-tasks"
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities"
@@ -137,13 +148,29 @@ export function TaskCard({
         >
           <Edit className="h-4 w-4" />
         </button>
-        <button
-          onClick={handleDelete}
-          className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded-lg"
-          aria-label={`Görevi sil "${title}"`}
-        >
-          <Trash2 className="h-4 w-4" />
-        </button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <button
+              onClick={(e) => e.stopPropagation()}
+              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded-lg"
+              aria-label={`Görevi sil "${title}"`}
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Görev silinsin mi?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Bu işlem geri alınamaz. Silmek istediğinize emin misiniz?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Vazgeç</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDelete}>Sil</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
 
       {/* Task content with better spacing and layout */}

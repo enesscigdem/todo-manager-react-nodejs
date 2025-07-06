@@ -12,8 +12,8 @@ export interface Task {
   description: string
   priority: "Low" | "Medium" | "High"
   completed: boolean
-  createdAt: string
-  updatedAt: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 export type FilterType = "All" | "Active" | "Completed"
@@ -235,6 +235,8 @@ const TasksContext = createContext<{
 // Provider component
 export function TasksProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(tasksReducer, initialState)
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null
+  const authHeader = token ? { Authorization: `Bearer ${token}` } : {}
 
   // Load tasks on mount
   useEffect(() => {
@@ -247,8 +249,14 @@ export function TasksProvider({ children }: { children: ReactNode }) {
         console.error("Failed to parse saved tasks:", error)
       }
     } else {
-      fetch(`${API_BASE}/api/tasks`)
-        .then((res) => res.json())
+      fetch(`${API_BASE}/api/tasks`, { headers: { ...authHeader } })
+        .then(async (res) => {
+          if (!res.ok) {
+            const err = await res.json()
+            throw new Error(err.error || "Failed to load tasks")
+          }
+          return res.json()
+        })
         .then((data) => {
           dispatch({ type: "SET_TASKS", payload: data })
           localStorage.setItem("tasks", JSON.stringify(data))
