@@ -3,6 +3,7 @@
 import { Search } from "lucide-react"
 import { useTasks } from "@/context/tasks-provider"
 import { useEffect, useState } from "react"
+import { DarkModeToggle } from "@/components/dark-mode-toggle"
 
 export function Header() {
   const { state, dispatch } = useTasks()
@@ -19,8 +20,11 @@ export function Header() {
 
   return (
     <header className="mb-8">
-      {/* Main title */}
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">📋 Görev Yöneticim</h1>
+      <div className="flex items-center justify-between mb-6">
+        {/* Main title */}
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">📋 Görev Yöneticim</h1>
+        <DarkModeToggle />
+      </div>
 
       {/* Search input with icon */}
       <div className="relative">
@@ -32,7 +36,7 @@ export function Header() {
           placeholder="Görevlerde ara..."
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
-          className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+          className="block w-full pl-10 pr-3 py-2 border rounded-lg leading-5 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           aria-label="Görevlerde ara"
         />
       </div>

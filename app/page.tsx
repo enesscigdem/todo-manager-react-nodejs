@@ -12,9 +12,9 @@ import { TaskDetailModal } from "@/components/task-detail-modal"
 export default function App() {
   return (
     <TasksProvider>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-r from-indigo-50 via-white to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
         {/* Main container with responsive max width */}
-        <div className="max-w-4xl mx-auto py-8 px-4">
+        <div className="max-w-4xl mx-auto py-10 px-4">
           {/* Header with title and search */}
           <Header />
 

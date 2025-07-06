@@ -110,7 +110,7 @@ export function TaskCard({
 
   return (
     <div
-      className={`bg-white rounded-2xl shadow-lg p-6 hover:scale-[1.02] transition-all duration-200 cursor-pointer relative group border border-gray-100 ${
+      className={`bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:scale-[1.02] transition-all duration-200 cursor-pointer relative group border border-gray-100 dark:border-gray-700 ${
         completed ? "opacity-60" : ""
       } ${isDragging ? "shadow-2xl scale-105 z-50 rotate-1" : "hover:shadow-xl"}`}
       role="article"
@@ -123,7 +123,9 @@ export function TaskCard({
         <button
           onClick={handleToggleComplete}
           className={`w-6 h-6 rounded-full border-2 transition-all duration-200 flex items-center justify-center hover:scale-110 ${
-            completed ? "bg-green-500 border-green-500 text-white" : "border-gray-300 hover:border-blue-400 bg-white"
+            completed
+              ? "bg-green-500 border-green-500 text-white"
+              : "border-gray-300 dark:border-gray-600 hover:border-blue-400 bg-white dark:bg-gray-800"
           }`}
           aria-label={`Görevi "${title}" ${completed ? "tamamlanmamış" : "tamamlanmış"} olarak işaretle`}
         >
@@ -143,7 +145,7 @@ export function TaskCard({
       <div className="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-150 z-10">
         <button
           onClick={handleEdit}
-          className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg"
+          className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg"
           aria-label={`Görevi düzenle "${title}"`}
         >
           <Edit className="h-4 w-4" />
@@ -152,7 +154,7 @@ export function TaskCard({
           <AlertDialogTrigger asChild>
             <button
               onClick={(e) => e.stopPropagation()}
-              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded-lg"
+              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded-lg"
               aria-label={`Görevi sil "${title}"`}
             >
               <Trash2 className="h-4 w-4" />
@@ -231,7 +233,7 @@ export function TaskCard({
       </div>
 
       {/* Drag overlay effect */}
-      {isDragging && <div className="absolute inset-0 bg-blue-50 bg-opacity-50 rounded-2xl pointer-events-none"></div>}
+      {isDragging && <div className="absolute inset-0 bg-blue-50 dark:bg-blue-900/20 bg-opacity-50 rounded-2xl pointer-events-none"></div>}
     </div>
   )
 }
