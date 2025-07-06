@@ -6,6 +6,7 @@ const createSchema = Joi.object({
   title: Joi.string().required(),
   description: Joi.string().allow(''),
   priority: Joi.string().valid('Low', 'Medium', 'High'),
+  completed: Joi.boolean(),
 });
 
 const updateSchema = Joi.object({
@@ -47,8 +48,9 @@ exports.create = async (req, res, next) => {
       .input('title', sql.NVarChar, value.title)
       .input('description', sql.NVarChar, value.description || null)
       .input('priority', sql.NVarChar, value.priority || 'Low')
+      .input('completed', sql.Bit, value.completed ?? false)
       .query(
-        'INSERT INTO Tasks (title, description, priority) OUTPUT INSERTED.* VALUES (@title, @description, @priority)'
+        'INSERT INTO Tasks (title, description, priority, completed) OUTPUT INSERTED.* VALUES (@title, @description, @priority, @completed)'
       )
     res.status(201).json(result.recordset[0])
   } catch (err) {
