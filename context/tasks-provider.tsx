@@ -234,7 +234,7 @@ const TasksContext = createContext<{
 export function TasksProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(tasksReducer, initialState)
 
-  // Load tasks from localStorage on mount
+  // Load tasks on mount
   useEffect(() => {
     const savedTasks = localStorage.getItem("tasks")
     if (savedTasks) {
@@ -245,8 +245,13 @@ export function TasksProvider({ children }: { children: ReactNode }) {
         console.error("Failed to parse saved tasks:", error)
       }
     } else {
-      // TODO: Fetch tasks from /api/tasks
-      // fetchTasksFromAPI()
+      fetch("/api/tasks")
+        .then((res) => res.json())
+        .then((data) => {
+          dispatch({ type: "SET_TASKS", payload: data })
+          localStorage.setItem("tasks", JSON.stringify(data))
+        })
+        .catch((err) => console.error("Failed to load tasks", err))
     }
   }, [])
 

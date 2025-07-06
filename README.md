@@ -34,7 +34,11 @@ This repository also includes an Express.js API powering the React frontend.
 
 ### Setup
 
-1. Copy `.env.example` to `.env` and fill in `MONGODB_URI` and `JWT_SECRET`.
+1. Copy `.env.example` to `.env` and fill in `MSSQL_CONNECTION_STRING` and `JWT_SECRET`.
+   The connection string looks like:
+   ```
+   MSSQL_CONNECTION_STRING="server=localhost;uid=sa;database=todo_manager;TrustServerCertificate=true;"
+   ```
 2. Install dependencies:
    ```bash
    npm install

@@ -67,7 +67,7 @@
     "vaul": "^0.9.6",
     "zod": "^3.24.1",
     "express": "^4",
-    "mongoose": "^7",
+    "mssql": "^10",
     "cors": "^2",
     "dotenv": "^16",
     "jsonwebtoken": "^9",
