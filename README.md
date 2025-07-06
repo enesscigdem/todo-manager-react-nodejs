@@ -51,7 +51,7 @@ This repository also includes an Express.js API powering the React frontend.
 ### Endpoints
 
 - `GET /api/tasks` – List your tasks. Query params: `filter=all|active|completed`, `search`.
-- `POST /api/tasks` – Create a task with `{title, description?, priority?}`.
+- `POST /api/tasks` – Create a task with `{title, description?, priority?, completed?}`.
 - `PUT /api/tasks/:id` – Update any task field.
 - `PATCH /api/tasks/:id/toggle` – Toggle completion.
 - `DELETE /api/tasks/:id` – Delete a task.
