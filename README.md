@@ -47,6 +47,8 @@ This repository also includes an Express.js API powering the React frontend.
    ```bash
    npm start
    ```
+4. The frontend expects the API to run on `http://localhost:3001`. If you change
+   the backend URL, set `NEXT_PUBLIC_API_URL` accordingly in `.env`.
 
 ### Endpoints
 

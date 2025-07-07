@@ -4,7 +4,8 @@ import { useTasks, type Task } from "@/context/tasks-provider"
 import { useCallback } from "react"
 import { useAuth } from "@/context/auth-provider"
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || ""
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001"
 
 // Custom hook for task operations with API integration
 export function useTaskOperations() {

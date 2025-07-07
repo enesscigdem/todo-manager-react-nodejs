@@ -4,7 +4,8 @@ import type React from "react"
 import { createContext, useContext, useReducer, useEffect, type ReactNode } from "react"
 import { useAuth } from "@/context/auth-provider"
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || ""
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001"
 
 // Types for our task management system
 export interface Task {
