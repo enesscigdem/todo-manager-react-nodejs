@@ -4,6 +4,7 @@ import { Search } from "lucide-react"
 import { useTasks } from "@/context/tasks-provider"
 import { useEffect, useState } from "react"
 import { DarkModeToggle } from "@/components/dark-mode-toggle"
+import { ThemeEditor } from "@/components/theme-editor"
 
 export function Header() {
   const { state, dispatch } = useTasks()
@@ -23,7 +24,10 @@ export function Header() {
       <div className="flex items-center justify-between mb-6">
         {/* Main title */}
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">📋 Görev Yöneticim</h1>
-        <DarkModeToggle />
+        <div className="flex items-center space-x-2">
+          <ThemeEditor />
+          <DarkModeToggle />
+        </div>
       </div>
 
       {/* Search input with icon */}

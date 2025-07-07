@@ -12,6 +12,7 @@ export interface Task {
   description: string
   priority: "Low" | "Medium" | "High"
   completed: boolean
+  progress?: number
   createdAt?: string
   updatedAt?: string
 }
@@ -23,6 +24,7 @@ interface TasksState {
   filteredTasks: Task[]
   searchQuery: string
   activeFilter: FilterType
+  loading: boolean
   isModalOpen: boolean
   editingTask: Task | null
   toast: {
@@ -48,6 +50,7 @@ type TasksAction =
   | { type: "CLOSE_MODAL" }
   | { type: "SHOW_TOAST"; payload: { message: string; type: "success" | "error" | "info"; undoAction?: () => void } }
   | { type: "HIDE_TOAST" }
+  | { type: "SET_LOADING"; payload: boolean }
   | { type: "REORDER_TASKS"; payload: { activeId: string; overId: string } }
   | { type: "OPEN_DETAIL_MODAL"; payload: Task }
   | { type: "CLOSE_DETAIL_MODAL" }
@@ -57,6 +60,7 @@ const initialState: TasksState = {
   filteredTasks: [],
   searchQuery: "",
   activeFilter: "All",
+  loading: true,
   isModalOpen: false,
   editingTask: null,
   toast: {
@@ -167,6 +171,11 @@ function tasksReducer(state: TasksState, action: TasksAction): TasksState {
           show: false,
         },
       }
+    case "SET_LOADING":
+      return {
+        ...state,
+        loading: action.payload,
+      }
     case "REORDER_TASKS":
       const { activeId, overId } = action.payload
       const oldIndex = state.tasks.findIndex((task) => task.id === activeId)
@@ -238,13 +247,16 @@ export function TasksProvider({ children }: { children: ReactNode }) {
 
   // Load tasks on mount
   useEffect(() => {
+    dispatch({ type: "SET_LOADING", payload: true })
     const savedTasks = localStorage.getItem("tasks")
     if (savedTasks) {
       try {
         const parsedTasks = JSON.parse(savedTasks)
         dispatch({ type: "SET_TASKS", payload: parsedTasks })
+        dispatch({ type: "SET_LOADING", payload: false })
       } catch (error) {
         console.error("Failed to parse saved tasks:", error)
+        dispatch({ type: "SET_LOADING", payload: false })
       }
     } else {
         fetch(`${API_BASE}/api/tasks`)
@@ -257,9 +269,13 @@ export function TasksProvider({ children }: { children: ReactNode }) {
         })
         .then((data) => {
           dispatch({ type: "SET_TASKS", payload: data })
+          dispatch({ type: "SET_LOADING", payload: false })
           localStorage.setItem("tasks", JSON.stringify(data))
         })
-        .catch((err) => console.error("Failed to load tasks", err))
+        .catch((err) => {
+          console.error("Failed to load tasks", err)
+          dispatch({ type: "SET_LOADING", payload: false })
+        })
     }
   }, [])
 

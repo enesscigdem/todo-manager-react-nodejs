@@ -15,6 +15,12 @@ export default {
   presets: [shadcnPreset],
   theme: {
     extend: {
+      colors: {
+        primary: 'rgb(var(--primary) / <alpha-value>)',
+      },
+      boxShadow: {
+        deep: '0 8px 24px rgba(0,0,0,0.08)',
+      },
       animation: {
         'fade-in': 'fadeIn 0.2s ease-in-out',
         'slide-up': 'slideUp 0.3s ease-out',

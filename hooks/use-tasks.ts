@@ -14,6 +14,7 @@ export function useTaskOperations() {
     async (taskData: Omit<Task, "id" | "createdAt" | "updatedAt">) => {
       const newTask: Task = {
         ...taskData,
+        progress: 0,
         id: crypto.randomUUID(),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),

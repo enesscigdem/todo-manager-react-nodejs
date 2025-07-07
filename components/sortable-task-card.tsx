@@ -10,9 +10,10 @@ interface SortableTaskCardProps {
   description: string
   priority: "Low" | "Medium" | "High"
   completed: boolean
+  progress?: number
 }
 
-export function SortableTaskCard({ id, title, description, priority, completed }: SortableTaskCardProps) {
+export function SortableTaskCard({ id, title, description, priority, completed, progress }: SortableTaskCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging, isOver } = useSortable({ id })
 
   const style = {
@@ -34,7 +35,8 @@ export function SortableTaskCard({ id, title, description, priority, completed }
         description={description}
         priority={priority}
         completed={completed}
-        dragHandleProps={listeners}
+        progress={progress}
+        dragHandleListeners={listeners}
         isDragging={isDragging}
       />
     </div>

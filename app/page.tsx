@@ -5,6 +5,7 @@ import { Header } from "@/components/header"
 import { FilterBar } from "@/components/filter-bar"
 import { TaskGrid } from "@/components/task-grid"
 import { TaskProgress } from "@/components/task-progress"
+import { MiniDashboard } from "@/components/mini-dashboard"
 import { TaskModal } from "@/components/task-modal"
 import { Toast } from "@/components/toast"
 import { FloatingAddButton } from "@/components/floating-add-button"
@@ -21,6 +22,9 @@ export default function App() {
 
           {/* Filter bar for task status filtering */}
           <FilterBar />
+
+          {/* Mini dashboard */}
+          <MiniDashboard />
 
           {/* Progress bar showing completion percentage */}
           <TaskProgress />

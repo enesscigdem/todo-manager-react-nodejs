@@ -24,7 +24,8 @@ interface TaskCardProps {
   description: string
   priority: "Low" | "Medium" | "High"
   completed: boolean
-  dragHandleProps?: SyntheticListenerMap
+  progress?: number
+  dragHandleListeners?: SyntheticListenerMap
   isDragging?: boolean
 }
 
@@ -34,7 +35,8 @@ export function TaskCard({
   description,
   priority,
   completed,
-  dragHandleProps,
+  progress,
+  dragHandleListeners,
   isDragging = false,
 }: TaskCardProps) {
   const { state, dispatch } = useTasks()
@@ -116,10 +118,18 @@ export function TaskCard({
       role="article"
       aria-label={`Görev: ${title}`}
       onClick={handleCardClick}
-      {...dragHandleProps} // Tüm kart sürüklenebilir
     >
-      {/* Modern toggle button - positioned in top-left */}
-      <div className="absolute top-4 left-4 z-10">
+      {/* Drag handle and toggle button */}
+      <div className="absolute top-4 left-4 z-10 flex items-center space-x-2">
+        <button
+          {...dragHandleListeners}
+          className="p-1 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing"
+          aria-label="Görevi sürükle"
+        >
+          <svg viewBox="0 0 20 20" className="w-3 h-3 fill-current" aria-hidden="true">
+            <path d="M7 4h2v2H7V4zm4 0h2v2h-2V4zm-4 4h2v2H7V8zm4 0h2v2h-2V8zm-4 4h2v2H7v-2zm4 0h2v2h-2v-2z" />
+          </svg>
+        </button>
         <button
           onClick={handleToggleComplete}
           className={`w-6 h-6 rounded-full border-2 transition-all duration-200 flex items-center justify-center hover:scale-110 ${
@@ -226,6 +236,17 @@ export function TaskCard({
           </div>
         </div>
       </div>
+
+      {typeof progress === 'number' && (
+        <div className="mt-4">
+          <div className="w-full h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+            <div
+              className="bg-primary h-1 transition-all"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Click hint with better positioning */}
       <div className="absolute bottom-3 left-4 opacity-0 group-hover:opacity-60 transition-opacity duration-200">

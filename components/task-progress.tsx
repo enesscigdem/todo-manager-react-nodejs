@@ -16,7 +16,7 @@ export function TaskProgress() {
       </div>
       <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
         <div
-          className="bg-gradient-to-r from-green-400 to-blue-500 h-2 transition-all"
+          className="h-2 transition-all bg-[--primary]"
           style={{ width: `${percent}%` }}
           role="progressbar"
           aria-valuenow={percent}
