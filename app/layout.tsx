@@ -23,14 +23,14 @@ export default function RootLayout({
       <head>
         <link rel="preload" href="/hover-gradient.js" as="script" />
       </head>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+      <body className={inter.className} suppressHydrationWarning={true}>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {children}
-          <ServiceWorkerRegister />
-        </ThemeProvider>
-        <Script id="houdini" strategy="beforeInteractive">
+          <ServiceWorkerRegister/>
+      </ThemeProvider>
+      <Script id="houdini" strategy="beforeInteractive">
           {`if ('paintWorklet' in CSS) {CSS.paintWorklet.addModule('/hover-gradient.js')}`}
-        </Script>
+      </Script>
       </body>
     </html>
   )
