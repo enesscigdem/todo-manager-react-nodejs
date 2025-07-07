@@ -189,7 +189,7 @@ export function TaskCard({
       <div className="mt-8 mb-4 pl-2">
         {/* Title with proper truncation and line height */}
         <h3
-          className={`text-lg font-semibold text-gray-900 mb-3 pr-20 leading-tight ${completed ? "line-through" : ""}`}
+          className={`text-lg font-semibold mb-3 pr-20 leading-tight ${completed ? "line-through" : ""}`}
           title={title} // Show full title on hover
           style={{
             wordBreak: "break-word",
