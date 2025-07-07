@@ -16,7 +16,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: 'rgb(var(--primary) / <alpha-value>)',
+        primary: {
+          50: '#eef2ff',
+          100: '#e0e7ff',
+          500: '#6366f1',
+          900: '#312e81',
+        },
+        accent: '#8b5cf6',
+        background: {
+          light: 'linear-gradient(to right, #1e3a8a, #4338ca, #6d28d9)',
+          dark: 'linear-gradient(to right, #111827, #1f2937, #374151)',
+        },
       },
       boxShadow: {
         deep: '0 8px 24px rgba(0,0,0,0.08)',
