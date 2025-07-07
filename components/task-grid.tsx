@@ -12,6 +12,8 @@ import {
 } from "@dnd-kit/core"
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { useTasks } from "@/context/tasks-provider"
+import Skeleton from "react-loading-skeleton"
+import 'react-loading-skeleton/dist/skeleton.css'
 import { SortableTaskCard } from "./sortable-task-card"
 
 export function TaskGrid() {
@@ -44,6 +46,17 @@ export function TaskGrid() {
     }
   }
 
+  // Show skeletons while loading
+  if (state.loading) {
+    return (
+      <div className="task-grid" data-testid="loading">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton key={i} height={120} style={{ borderRadius: '1rem' }} />
+        ))}
+      </div>
+    )
+  }
+
   // Show empty state when no tasks match current filter/search
   if (state.filteredTasks.length === 0) {
     return (
@@ -73,7 +86,7 @@ export function TaskGrid() {
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={state.filteredTasks.map((task) => task.id)} strategy={verticalListSortingStrategy}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="task-grid">
           <AnimatePresence mode="popLayout">
             {state.filteredTasks.map((task) => (
               <motion.div
@@ -93,6 +106,7 @@ export function TaskGrid() {
                   description={task.description}
                   priority={task.priority}
                   completed={task.completed}
+                  progress={task.progress}
                 />
               </motion.div>
             ))}

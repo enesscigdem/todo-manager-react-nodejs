@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
 
 @layer utilities {
   .text-balance {
@@ -90,5 +87,31 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Container queries for the task grid */
+.task-grid {
+  container-type: inline-size;
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+}
+
+@container (min-width: 500px) {
+  .task-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@container (min-width: 800px) {
+  .task-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@supports (background: paint(hover-gradient)) {
+  .card-hover {
+    background: paint(hover-gradient);
   }
 }

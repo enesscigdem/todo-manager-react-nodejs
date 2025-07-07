@@ -2,20 +2,24 @@
 
 import { Plus } from "lucide-react"
 import { useTasks } from "@/context/tasks-provider"
+import { trackEvent } from "@/lib/analytics"
 
 export function FloatingAddButton() {
   const { dispatch } = useTasks()
 
   const handleClick = () => {
     dispatch({ type: "OPEN_MODAL" })
+    trackEvent('open_new_task')
   }
 
   return (
-    <button
-      onClick={handleClick}
-      className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 z-40"
+      <button
+        onClick={handleClick}
+      className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 z-40 hover:animate-pulse"
       aria-label="Add new task"
-    >
+      title="Yeni görev ekle"
+      data-tour="add"
+      >
       <Plus className="h-6 w-6" />
     </button>
   )

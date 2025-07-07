@@ -24,7 +24,8 @@ interface TaskCardProps {
   description: string
   priority: "Low" | "Medium" | "High"
   completed: boolean
-  dragHandleProps?: SyntheticListenerMap
+  progress?: number
+  dragHandleListeners?: SyntheticListenerMap
   isDragging?: boolean
 }
 
@@ -34,7 +35,8 @@ export function TaskCard({
   description,
   priority,
   completed,
-  dragHandleProps,
+  progress,
+  dragHandleListeners,
   isDragging = false,
 }: TaskCardProps) {
   const { state, dispatch } = useTasks()
@@ -110,20 +112,30 @@ export function TaskCard({
 
   return (
     <div
-      className={`bg-white rounded-2xl shadow-lg p-6 hover:scale-[1.02] transition-all duration-200 cursor-pointer relative group border border-gray-100 ${
+      className={`card-hover bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:scale-[1.02] transition-all duration-200 cursor-pointer relative group border border-gray-100 dark:border-gray-700 ${
         completed ? "opacity-60" : ""
       } ${isDragging ? "shadow-2xl scale-105 z-50 rotate-1" : "hover:shadow-xl"}`}
       role="article"
       aria-label={`Görev: ${title}`}
       onClick={handleCardClick}
-      {...dragHandleProps} // Tüm kart sürüklenebilir
     >
-      {/* Modern toggle button - positioned in top-left */}
-      <div className="absolute top-4 left-4 z-10">
+      {/* Drag handle and toggle button */}
+      <div className="absolute top-4 left-4 z-10 flex items-center space-x-2">
+        <button
+          {...dragHandleListeners}
+          className="p-1 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing"
+          aria-label="Görevi sürükle"
+        >
+          <svg viewBox="0 0 20 20" className="w-3 h-3 fill-current" aria-hidden="true">
+            <path d="M7 4h2v2H7V4zm4 0h2v2h-2V4zm-4 4h2v2H7V8zm4 0h2v2h-2V8zm-4 4h2v2H7v-2zm4 0h2v2h-2v-2z" />
+          </svg>
+        </button>
         <button
           onClick={handleToggleComplete}
           className={`w-6 h-6 rounded-full border-2 transition-all duration-200 flex items-center justify-center hover:scale-110 ${
-            completed ? "bg-green-500 border-green-500 text-white" : "border-gray-300 hover:border-blue-400 bg-white"
+            completed
+              ? "bg-green-500 border-green-500 text-white"
+              : "border-gray-300 dark:border-gray-600 hover:border-blue-400 bg-white dark:bg-gray-800"
           }`}
           aria-label={`Görevi "${title}" ${completed ? "tamamlanmamış" : "tamamlanmış"} olarak işaretle`}
         >
@@ -143,7 +155,7 @@ export function TaskCard({
       <div className="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-150 z-10">
         <button
           onClick={handleEdit}
-          className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg"
+          className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg"
           aria-label={`Görevi düzenle "${title}"`}
         >
           <Edit className="h-4 w-4" />
@@ -152,7 +164,7 @@ export function TaskCard({
           <AlertDialogTrigger asChild>
             <button
               onClick={(e) => e.stopPropagation()}
-              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded-lg"
+              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded-lg"
               aria-label={`Görevi sil "${title}"`}
             >
               <Trash2 className="h-4 w-4" />
@@ -225,13 +237,24 @@ export function TaskCard({
         </div>
       </div>
 
+      {typeof progress === 'number' && (
+        <div className="mt-4">
+          <div className="w-full h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+            <div
+              className="bg-primary h-1 transition-all"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Click hint with better positioning */}
       <div className="absolute bottom-3 left-4 opacity-0 group-hover:opacity-60 transition-opacity duration-200">
         <span className="text-xs text-gray-500">Detaylar için tıklayın</span>
       </div>
 
       {/* Drag overlay effect */}
-      {isDragging && <div className="absolute inset-0 bg-blue-50 bg-opacity-50 rounded-2xl pointer-events-none"></div>}
+      {isDragging && <div className="absolute inset-0 bg-blue-50 dark:bg-blue-900/20 bg-opacity-50 rounded-2xl pointer-events-none"></div>}
     </div>
   )
 }
