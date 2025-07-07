@@ -23,19 +23,19 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-sky-50 via-white to-emerald-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-4">
-      <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow w-full max-w-md space-y-4">
-        <h1 className="text-2xl font-semibold text-center">Giriş Yap</h1>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-sky-100 via-white to-emerald-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-4">
+      <form onSubmit={handleSubmit} className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md p-10 rounded-xl shadow-2xl w-full max-w-md space-y-6">
+        <h1 className="text-3xl font-bold text-center">Giriş Yap</h1>
         <div>
           <label htmlFor="email" className="block text-sm mb-1">Email</label>
-          <input id="email" type="email" value={email} onChange={e=>setEmail(e.target.value)} required className="w-full px-3 py-2 border rounded-md" />
+          <input id="email" type="email" value={email} onChange={e=>setEmail(e.target.value)} required className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" />
         </div>
         <div>
           <label htmlFor="password" className="block text-sm mb-1">Şifre</label>
-          <input id="password" type="password" value={password} onChange={e=>setPassword(e.target.value)} required className="w-full px-3 py-2 border rounded-md" />
+          <input id="password" type="password" value={password} onChange={e=>setPassword(e.target.value)} required className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" />
         </div>
         {error && <p className="text-sm text-red-600">{error}</p>}
-        <button type="submit" className="w-full px-4 py-2 bg-blue-600 text-white rounded-md">Giriş Yap</button>
+        <button type="submit" className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Giriş Yap</button>
         <p className="text-sm text-center">Hesabınız yok mu? <Link href="/register" className="text-blue-600 hover:underline">Kayıt Ol</Link></p>
       </form>
     </div>
