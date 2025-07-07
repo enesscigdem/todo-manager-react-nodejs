@@ -4,12 +4,15 @@ import { TasksProvider } from "@/context/tasks-provider"
 import { Header } from "@/components/header"
 import { FilterBar } from "@/components/filter-bar"
 import { TaskGrid } from "@/components/task-grid"
-import { TaskProgress } from "@/components/task-progress"
-import { MiniDashboard } from "@/components/mini-dashboard"
-import { TaskModal } from "@/components/task-modal"
+import React, { Suspense } from "react"
+const TaskProgress = React.lazy(() => import("@/components/task-progress"))
+const MiniDashboard = React.lazy(() => import("@/components/mini-dashboard"))
+const TaskModal = React.lazy(() => import("@/components/task-modal"))
 import { Toast } from "@/components/toast"
 import { FloatingAddButton } from "@/components/floating-add-button"
-import { TaskDetailModal } from "@/components/task-detail-modal"
+const TaskDetailModal = React.lazy(() => import("@/components/task-detail-modal"))
+const OnboardingTour = React.lazy(() => import("@/components/onboarding-tour"))
+const InteractionDashboard = React.lazy(() => import("@/components/interaction-dashboard"))
 
 export default function App() {
   return (
@@ -24,10 +27,18 @@ export default function App() {
           <FilterBar />
 
           {/* Mini dashboard */}
-          <MiniDashboard />
+          <Suspense fallback={<div className="h-32" />}>
+            <MiniDashboard />
+          </Suspense>
+
+          <Suspense fallback={<div className="h-40" />}>
+            <InteractionDashboard />
+          </Suspense>
 
           {/* Progress bar showing completion percentage */}
-          <TaskProgress />
+          <Suspense fallback={null}>
+            <TaskProgress />
+          </Suspense>
 
           {/* Main task grid */}
           <TaskGrid />
@@ -36,13 +47,20 @@ export default function App() {
           <FloatingAddButton />
 
           {/* Task creation/editing modal */}
-          <TaskModal />
+          <Suspense fallback={null}>
+            <TaskModal />
+          </Suspense>
 
           {/* Task detail viewing modal */}
-          <TaskDetailModal />
+          <Suspense fallback={null}>
+            <TaskDetailModal />
+          </Suspense>
 
           {/* Toast notifications */}
           <Toast />
+          <Suspense fallback={null}>
+            <OnboardingTour />
+          </Suspense>
         </div>
       </div>
     </TasksProvider>

@@ -112,7 +112,7 @@ export function TaskCard({
 
   return (
     <div
-      className={`bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:scale-[1.02] transition-all duration-200 cursor-pointer relative group border border-gray-100 dark:border-gray-700 ${
+      className={`card-hover bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:scale-[1.02] transition-all duration-200 cursor-pointer relative group border border-gray-100 dark:border-gray-700 ${
         completed ? "opacity-60" : ""
       } ${isDragging ? "shadow-2xl scale-105 z-50 rotate-1" : "hover:shadow-xl"}`}
       role="article"

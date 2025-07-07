@@ -1,0 +1,17 @@
+{
+  "color": {
+    "primary": { "value": "#3b82f6" },
+    "surface": { "value": "#ffffff" }
+  },
+  "spacing": {
+    "sm": { "value": "4px" },
+    "md": { "value": "8px" },
+    "lg": { "value": "16px" }
+  },
+  "font": {
+    "size": {
+      "base": { "value": "16px" },
+      "lg": { "value": "20px" }
+    }
+  }
+}

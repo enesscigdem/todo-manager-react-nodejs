@@ -32,7 +32,7 @@ export function FilterBar() {
   }
 
   return (
-    <div className="mb-6">
+    <div className="mb-6" data-tour="filter">
       <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg shadow-sm">
           {filters.map((filter) => (
             <button

@@ -49,7 +49,7 @@ export function TaskGrid() {
   // Show skeletons while loading
   if (state.loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="loading">
+      <div className="task-grid" data-testid="loading">
         {Array.from({ length: 6 }).map((_, i) => (
           <Skeleton key={i} height={120} style={{ borderRadius: '1rem' }} />
         ))}
@@ -86,7 +86,7 @@ export function TaskGrid() {
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={state.filteredTasks.map((task) => task.id)} strategy={verticalListSortingStrategy}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="task-grid">
           <AnimatePresence mode="popLayout">
             {state.filteredTasks.map((task) => (
               <motion.div

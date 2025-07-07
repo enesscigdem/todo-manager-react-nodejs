@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { createContext, useContext, useReducer, useEffect, type ReactNode } from "react"
+import { trackEvent } from '@/lib/analytics'
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || ""
 
@@ -84,6 +85,7 @@ function tasksReducer(state: TasksState, action: TasksAction): TasksState {
 
     case "ADD_TASK":
       const newTasks = [...state.tasks, action.payload]
+      trackEvent('task_added')
       return {
         ...state,
         tasks: newTasks,
@@ -112,6 +114,7 @@ function tasksReducer(state: TasksState, action: TasksAction): TasksState {
           ? { ...task, completed: !task.completed, updatedAt: new Date().toISOString() }
           : task,
       )
+      trackEvent('task_toggled')
       return {
         ...state,
         tasks: toggledTasks,

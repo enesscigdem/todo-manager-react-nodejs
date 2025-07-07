@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
+import { trackEvent } from '@/lib/analytics'
 import { Palette } from 'lucide-react'
 
 export function ThemeEditor() {
@@ -15,10 +16,11 @@ export function ThemeEditor() {
   useEffect(() => {
     document.documentElement.style.setProperty('--primary', color)
     localStorage.setItem('primaryColor', color)
+    trackEvent('theme_color_change', { color })
   }, [color])
 
   return (
-    <div className="relative">
+    <div className="relative" data-tour="theme">
       <button
         onClick={() => setOpen((o) => !o)}
         className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
