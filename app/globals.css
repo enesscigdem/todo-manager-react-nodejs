@@ -2,8 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-
+/* ———————————————— */
+/* CSS variable tabanlı renk util sınıfları */
+/* ———————————————— */
 @layer utilities {
+  .bg-background {
+    background-color: hsl(var(--background));
+  }
+  .text-foreground {
+    color: hsl(var(--foreground));
+  }
+  .bg-card {
+    background-color: hsl(var(--card));
+  }
+  .text-card-foreground {
+    color: hsl(var(--card-foreground));
+  }
+  .bg-popover {
+    background-color: hsl(var(--popover));
+  }
+  .text-popover-foreground {
+    color: hsl(var(--popover-foreground));
+  }
+  .border-border {
+    border-color: hsl(var(--border));
+  }
+  .bg-input {
+    background-color: hsl(var(--input));
+  }
+  .ring-ring {
+    --tw-ring-color: hsl(var(--ring));
+  }
   .text-balance {
     text-wrap: balance;
   }
@@ -11,6 +40,7 @@
 
 @layer base {
   :root {
+    /* Mevcut değişken tanımlarınız */
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -46,6 +76,7 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
+    /* Mevcut dark-mode değişken tanımlarınız */
     --background: 0 0% 8%;
     --foreground: 0 0% 98%;
     --card: 0 0% 12%;
@@ -79,13 +110,15 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
-}
 
-@layer base {
+  /* Tüm elemanlar için border rengi */
   * {
     @apply border-border;
   }
+
+  /* Body’ye Tailwind util yerine direkt CSS variable */
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 }
