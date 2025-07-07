@@ -20,11 +20,20 @@ module.exports = async function connect(connectionString) {
       IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'Tasks') AND type in (N'U'))
       CREATE TABLE Tasks (
         id INT IDENTITY(1,1) PRIMARY KEY,
+        userId INT NOT NULL,
         title NVARCHAR(255) NOT NULL,
         description NVARCHAR(MAX),
         priority NVARCHAR(10) DEFAULT 'Low',
-        completed BIT DEFAULT 0
+        completed BIT DEFAULT 0,
+        FOREIGN KEY (userId) REFERENCES Users(id)
       )
+    `)
+    // Ensure userId column exists if table was created previously without it
+    await pool.request().query(`
+      IF COL_LENGTH('Tasks','userId') IS NULL
+      BEGIN
+        ALTER TABLE Tasks ADD userId INT NOT NULL DEFAULT 0;
+      END
     `)
   } catch (err) {
     console.error('MSSQL connection error:', err.message)
