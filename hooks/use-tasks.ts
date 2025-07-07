@@ -2,12 +2,14 @@
 
 import { useTasks, type Task } from "@/context/tasks-provider"
 import { useCallback } from "react"
+import { useAuth } from "@/context/auth-provider"
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || ""
 
 // Custom hook for task operations with API integration
 export function useTaskOperations() {
   const { state, dispatch } = useTasks()
+  const { token } = useAuth()
 
   // Add a new task
   const addTask = useCallback(
@@ -23,7 +25,7 @@ export function useTaskOperations() {
       try {
         const res = await fetch(`${API_BASE}/api/tasks`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
           body: JSON.stringify(taskData),
         })
         if (!res.ok) {
@@ -66,7 +68,7 @@ export function useTaskOperations() {
       try {
         const res = await fetch(`${API_BASE}/api/tasks/${updatedTask.id}`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
           body: JSON.stringify(payload),
         })
         if (!res.ok) {
@@ -98,6 +100,7 @@ export function useTaskOperations() {
       try {
         const res = await fetch(`${API_BASE}/api/tasks/${taskId}`, {
           method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
         })
         if (!res.ok) {
           const err = await res.json()
@@ -132,6 +135,7 @@ export function useTaskOperations() {
       try {
         const res = await fetch(`${API_BASE}/api/tasks/${taskId}/toggle`, {
           method: "PATCH",
+          headers: { Authorization: `Bearer ${token}` },
         })
         if (!res.ok) {
           const err = await res.json()

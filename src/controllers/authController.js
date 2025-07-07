@@ -67,3 +67,53 @@ exports.login = async (req, res, next) => {
     next(err);
   }
 };
+
+// Return current user info
+exports.profile = async (req, res, next) => {
+  try {
+    const pool = getPool();
+    const { recordset } = await pool
+      .request()
+      .input('id', sql.Int, req.userId)
+      .query('SELECT id, email FROM Users WHERE id=@id');
+    if (recordset.length === 0) return res.status(404).json({ error: 'User not found' });
+    res.json(recordset[0]);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Update current user email or password
+exports.updateProfile = async (req, res, next) => {
+  try {
+    const schema = Joi.object({
+      email: Joi.string().email(),
+      password: Joi.string().min(6),
+    }).min(1);
+    const { error, value } = schema.validate(req.body);
+    if (error) return res.status(400).json({ error: error.message });
+
+    const pool = getPool();
+    const fields = [];
+    const request = pool.request().input('id', sql.Int, req.userId);
+    if (value.email) {
+      request.input('email', sql.NVarChar, value.email);
+      fields.push('email=@email');
+    }
+    if (value.password) {
+      const hashed = await bcrypt.hash(value.password, 10);
+      request.input('password', sql.NVarChar, hashed);
+      fields.push('password=@password');
+    }
+    if (fields.length > 0) {
+      await request.query(`UPDATE Users SET ${fields.join(', ')} WHERE id=@id`);
+    }
+    const { recordset } = await pool
+      .request()
+      .input('id', sql.Int, req.userId)
+      .query('SELECT id, email FROM Users WHERE id=@id');
+    res.json(recordset[0]);
+  } catch (err) {
+    next(err);
+  }
+};

@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { createContext, useContext, useReducer, useEffect, type ReactNode } from "react"
+import { useAuth } from "@/context/auth-provider"
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || ""
 
@@ -243,48 +244,35 @@ const TasksContext = createContext<{
 
 // Provider component
 export function TasksProvider({ children }: { children: ReactNode }) {
+  const { token } = useAuth()
   const [state, dispatch] = useReducer(tasksReducer, initialState)
 
   // Load tasks on mount
   useEffect(() => {
+    if (!token) {
+      dispatch({ type: "SET_LOADING", payload: false })
+      return
+    }
     dispatch({ type: "SET_LOADING", payload: true })
-    const savedTasks = localStorage.getItem("tasks")
-    if (savedTasks) {
-      try {
-        const parsedTasks = JSON.parse(savedTasks)
-        dispatch({ type: "SET_TASKS", payload: parsedTasks })
+    fetch(`${API_BASE}/api/tasks`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const err = await res.json()
+          throw new Error(err.error || "Failed to load tasks")
+        }
+        return res.json()
+      })
+      .then((data) => {
+        dispatch({ type: "SET_TASKS", payload: data })
         dispatch({ type: "SET_LOADING", payload: false })
-      } catch (error) {
-        console.error("Failed to parse saved tasks:", error)
+      })
+      .catch((err) => {
+        console.error("Failed to load tasks", err)
         dispatch({ type: "SET_LOADING", payload: false })
-      }
-    } else {
-        fetch(`${API_BASE}/api/tasks`)
-        .then(async (res) => {
-          if (!res.ok) {
-            const err = await res.json()
-            throw new Error(err.error || "Failed to load tasks")
-          }
-          return res.json()
-        })
-        .then((data) => {
-          dispatch({ type: "SET_TASKS", payload: data })
-          dispatch({ type: "SET_LOADING", payload: false })
-          localStorage.setItem("tasks", JSON.stringify(data))
-        })
-        .catch((err) => {
-          console.error("Failed to load tasks", err)
-          dispatch({ type: "SET_LOADING", payload: false })
-        })
-    }
-  }, [])
-
-  // Save tasks to localStorage whenever tasks change
-  useEffect(() => {
-    if (state.tasks.length > 0) {
-      localStorage.setItem("tasks", JSON.stringify(state.tasks))
-    }
-  }, [state.tasks])
+      })
+  }, [token])
 
   return <TasksContext.Provider value={{ state, dispatch }}>{children}</TasksContext.Provider>
 }
