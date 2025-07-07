@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import Joyride from 'react-joyride'
+
 
 const steps = [
   {
@@ -18,23 +18,15 @@ const steps = [
 ]
 
 export function OnboardingTour() {
-  const [run, setRun] = React.useState(false)
   React.useEffect(() => {
     if (!localStorage.getItem('tourDone')) {
-      setRun(true)
+      // Basit bir tur için her adımın içeriğini alert ile göster
+      for (const step of steps) {
+        window.alert(step.content)
+      }
+      localStorage.setItem('tourDone', 'true')
     }
   }, [])
-  return (
-    <Joyride
-      steps={steps}
-      run={run}
-      continuous
-      showSkipButton
-      callback={(data) => {
-        if (data.status === 'finished' || data.status === 'skipped') {
-          localStorage.setItem('tourDone', 'true')
-        }
-      }}
-    />
-  )
+
+  return null
 }
