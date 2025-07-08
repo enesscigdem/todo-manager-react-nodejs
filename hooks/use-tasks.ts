@@ -47,7 +47,7 @@ export function useTaskOperations() {
         })
       }
     },
-    [dispatch],
+    [dispatch, token],
   )
 
   // Update an existing task
@@ -89,7 +89,7 @@ export function useTaskOperations() {
         })
       }
     },
-    [dispatch],
+    [dispatch, token],
   )
 
   // Delete a task with undo functionality
@@ -127,7 +127,7 @@ export function useTaskOperations() {
         })
       }
     },
-    [state.tasks, dispatch],
+    [state.tasks, dispatch, token],
   )
 
   // Toggle task completion status
@@ -151,7 +151,7 @@ export function useTaskOperations() {
         })
       }
     },
-    [dispatch],
+    [dispatch, token],
   )
 
   return {
